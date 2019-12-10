@@ -33,24 +33,13 @@ import java.awt.event.MouseListener;
 
 public class CPainting extends Canvas implements MouseListener {
   private static final long serialVersionUID = 1L;
-  // matrice servant pour le produit de convolution
-  private float[][] mMatriceConv;
-  // Objet de type Graphics permettant de manipuler l'affichage du Canvas
-  private Graphics mGraphics;
-  // Objet ne servant que pour les bloc synchronized pour la manipulation du
-  // tableau des couleurs
-  private Object mMutexCouleurs = new Object();
-  // tableau des couleurs, il permert de conserver en memoire l'état de chaque
-  // pixel du canvas, ce qui est necessaire au deplacemet des fourmi
-  // il sert aussi pour la fonction paint du Canvas
-  private Color[][] mCouleurs;
-  // couleur du fond
-  private Color mCouleurFond = new Color(255, 255, 255);
-  // dimensions
-  private Dimension mDimension = new Dimension();
-
+  private float[][] mMatriceConv;                                       // matrice servant pour le produit de convolution
+  private Graphics mGraphics;                                           // Objet de type Graphics permettant de manipuler l'affichage du Canvas
+  private Object mMutexCouleurs = new Object();                         // Objet ne servant que pour les bloc synchronized pour la manipulation du tableau des couleurs
+  private Color[][] mCouleurs;                                          // tableau des couleurs,
+  private Color mCouleurFond = new Color(255, 255, 255);       // couleur du fond
+  private Dimension mDimension = new Dimension();                       // dimensions
   private PaintingAnts mApplis;
-
   private boolean mSuspendu = false;
 
   /******************************************************************************
@@ -252,8 +241,6 @@ public class CPainting extends Canvas implements MouseListener {
       }
     }
 
-
-
     mSuspendu = false;
   }
 
@@ -335,28 +322,21 @@ public class CPainting extends Canvas implements MouseListener {
 
     // produit de convolution discrete sur 9 cases
     for(i=0; i < 2*pTaille + 1; i++){
-
       for(j=0; j < 2*pTaille + 1; j++){
-
         R = G = B = 0f;
 
         for (k = 0; k < 2*pTaille; k++) {
-
           for (l = 0; l < 2*pTaille; l++) {
-
             m = (x + i + k - 2*pTaille + mDimension.width) % mDimension.width;
             n = (y + j + l - 2*pTaille + mDimension.height) % mDimension.height;
 
             R += mMatriceConv[k][l] * mCouleurs[m][n].getRed();
             G += mMatriceConv[k][l] * mCouleurs[m][n].getGreen();
             B += mMatriceConv[k][l] * mCouleurs[m][n].getBlue();
-
           }
-
         }
 
         lColor = new Color((int) R, (int) G, (int) B);
-
         mGraphics.setColor(lColor);
 
         m = (x + i - pTaille + mDimension.width) % mDimension.width;
