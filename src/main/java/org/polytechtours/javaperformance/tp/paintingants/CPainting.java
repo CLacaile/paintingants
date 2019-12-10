@@ -32,24 +32,24 @@ import java.awt.event.MouseListener;
  */
 
 public class CPainting extends Canvas implements MouseListener {
-    private static final long serialVersionUID = 1L;
-    // matrice servant pour le produit de convolution
-    static private float[][] mMatriceConv9 = new float[3][3];
-    static private float[][] mMatriceConv25 = new float[5][5];
-    static private float[][] mMatriceConv49 = new float[7][7];
-    // Objet de type Graphics permettant de manipuler l'affichage du Canvas
-    private Graphics mGraphics;
-    // Objet ne servant que pour les bloc synchronized pour la manipulation du
-    // tableau des couleurs
-    private Object mMutexCouleurs = new Object();
-    // tableau des couleurs, il permert de conserver en memoire l'état de chaque
-    // pixel du canvas, ce qui est necessaire au deplacemet des fourmi
-    // il sert aussi pour la fonction paint du Canvas
-    private Color[][] mCouleurs;
-    // couleur du fond
-    private Color mCouleurFond = new Color(255, 255, 255);
-    // dimensions
-    private Dimension mDimension = new Dimension();
+  private static final long serialVersionUID = 1L;
+  // matrice servant pour le produit de convolution
+  static private float[][] mMatriceConv9 = new float[3][3]; // new utile ? on pourrait appeler un init correspondant dans le switch
+  static private float[][] mMatriceConv25 = new float[5][5];
+  static private float[][] mMatriceConv49 = new float[7][7];
+  // Objet de type Graphics permettant de manipuler l'affichage du Canvas
+  private Graphics mGraphics;
+  // Objet ne servant que pour les bloc synchronized pour la manipulation du
+  // tableau des couleurs
+  private Object mMutexCouleurs = new Object();
+  // tableau des couleurs, il permert de conserver en memoire l'état de chaque
+  // pixel du canvas, ce qui est necessaire au deplacemet des fourmi
+  // il sert aussi pour la fonction paint du Canvas
+  private Color[][] mCouleurs;
+  // couleur du fond
+  private Color mCouleurFond = new Color(255, 255, 255);
+  // dimensions
+  private Dimension mDimension = new Dimension();
 
     private PaintingAnts mApplis;
 
@@ -370,18 +370,12 @@ public class CPainting extends Canvas implements MouseListener {
                 mGraphics.fillRect(x, y, 1, 1);
             }
 
-            mCouleurs[x][y] = c;
+      mCouleurs[x][y] = c;
 
-            // on fait diffuser la couleur :
-            switch (pTaille) {
-                case 0:
-                    // on ne fait rien = pas de diffusion
-                    break;
-                default:
-                    convolution(x, y, c, pTaille);
-                    break;
-            }// end switch
-        }
+      // on fait diffuser la couleur avec une taille de diffusion pTaille:
+      if (pTaille != 0) {
+        convolution(x,y,c,pTaille);
+      }
     }
 
     /******************************************************************************
