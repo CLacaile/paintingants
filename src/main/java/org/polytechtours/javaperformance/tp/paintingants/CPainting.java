@@ -11,6 +11,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -36,7 +38,8 @@ public class CPainting extends Canvas implements MouseListener {
   private float[][] mMatriceConv;                                       // matrice servant pour le produit de convolution
   private Graphics mGraphics;                                           // Objet de type Graphics permettant de manipuler l'affichage du Canvas
   private Object mMutexCouleurs = new Object();                         // Objet ne servant que pour les bloc synchronized pour la manipulation du tableau des couleurs
-  private Color[][] mCouleurs;                                          // tableau des couleurs,
+  private Color[][] mCouleurs;                                          // tableau des couleurs
+  private Color[][][] cacheCouleurs = new Color[256][256][256];         // cache de couleurs
   private Color mCouleurFond = new Color(255, 255, 255);       // couleur du fond
   private Dimension mDimension = new Dimension();                       // dimensions
   private PaintingAnts mApplis;
@@ -66,6 +69,8 @@ public class CPainting extends Canvas implements MouseListener {
       }
     }
 
+    // initialisation du cache des couleurs
+    initCacheCouleurs();
   }
 
   /******************************************************************************
@@ -100,6 +105,18 @@ public class CPainting extends Canvas implements MouseListener {
    ******************************************************************************/
   public int getLargeur() {
     return mDimension.width;
+  }
+
+  private void initCacheCouleurs() {
+      int r, g, b;
+      for (r=0; r<256; r++) {
+          for (g = 0; g < 256; g++) {
+              for (b = 0; b < 256; b++) {
+                  System.out.println("R = " + r + ", G = " + g + ", B = " + b);
+                  cacheCouleurs[r][g][b] = new Color(r, g, b);
+              }
+          }
+      }
   }
 
   public void initMatriceConv9() {
@@ -336,7 +353,7 @@ public class CPainting extends Canvas implements MouseListener {
           }
         }
 
-        lColor = new Color((int) R, (int) G, (int) B);
+        lColor = cacheCouleurs[(int) R][(int) G][(int) B];
         mGraphics.setColor(lColor);
 
         m = (x + i - pTaille + mDimension.width) % mDimension.width;
