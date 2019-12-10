@@ -117,11 +117,7 @@ public class CPainting extends Canvas implements MouseListener {
      * Titre : void init() Description : Initialise le fond a la couleur blanche
      * et initialise le tableau des couleurs avec la couleur blanche
      ******************************************************************************/
-    public void init() {
-        int i, j;
-        mGraphics = getGraphics();
-        synchronized (mMutexCouleurs) {
-            mGraphics.clearRect(0, 0, mDimension.width, mDimension.height);
+
 
   public void initMatriceConv9() {
     // initialisation de la matrice de convolution : lissage moyen sur 9
@@ -331,55 +327,55 @@ public class CPainting extends Canvas implements MouseListener {
         float R, G, B;
         Color lColor;
 
-    switch (pTaille) {
-      case 1:
-        initMatriceConv9();
-        break;
-      case 2:
-        initMatriceConv25();
-        break;
-      case 3:
-        initMatriceConv49();
-        break;
-    }
-
-    // produit de convolution discrete sur 9 cases
-    for(i=0; i < 2*pTaille + 1; i++){
-
-      for(j=0; j < 2*pTaille + 1; j++){
-
-        R = G = B = 0f;
-
-        for (k = 0; k < 2*pTaille; k++) {
-
-          for (l = 0; l < 2*pTaille; l++) {
-
-            m = (x + i + k - 2*pTaille + mDimension.width) % mDimension.width;
-            n = (y + j + l - 2*pTaille + mDimension.height) % mDimension.height;
-
-            R += mMatriceConv[k][l] * mCouleurs[m][n].getRed();
-            G += mMatriceConv[k][l] * mCouleurs[m][n].getGreen();
-            B += mMatriceConv[k][l] * mCouleurs[m][n].getBlue();
-
-          }
-
+        switch (pTaille) {
+            case 1:
+                initMatriceConv9();
+                break;
+            case 2:
+                initMatriceConv25();
+                break;
+            case 3:
+                initMatriceConv49();
+                break;
         }
 
-        lColor = new Color((int) R, (int) G, (int) B);
+        // produit de convolution discrete sur 9 cases
+        for (i = 0; i < 2 * pTaille + 1; i++) {
+
+            for (j = 0; j < 2 * pTaille + 1; j++) {
+
+                R = G = B = 0f;
+
+                for (k = 0; k < 2 * pTaille; k++) {
+
+                    for (l = 0; l < 2 * pTaille; l++) {
+
+                        m = (x + i + k - 2 * pTaille + mDimension.width) % mDimension.width;
+                        n = (y + j + l - 2 * pTaille + mDimension.height) % mDimension.height;
+
+                        R += mMatriceConv[k][l] * mCouleurs[m][n].getRed();
+                        G += mMatriceConv[k][l] * mCouleurs[m][n].getGreen();
+                        B += mMatriceConv[k][l] * mCouleurs[m][n].getBlue();
+
+                    }
+
+                }
+
+                lColor = new Color((int) R, (int) G, (int) B);
 
                 mGraphics.setColor(lColor);
 
-        m = (x + i - pTaille + mDimension.width) % mDimension.width;
-        n = (y + j - pTaille + mDimension.height) % mDimension.height;
+                m = (x + i - pTaille + mDimension.width) % mDimension.width;
+                n = (y + j - pTaille + mDimension.height) % mDimension.height;
 
-        mCouleurs[m][n] = lColor;
+                mCouleurs[m][n] = lColor;
 
-        if (!mSuspendu) {
-          mGraphics.fillRect(m, n, 1, 1);
+                if (!mSuspendu) {
+                    mGraphics.fillRect(m, n, 1, 1);
+                }
+
+            }
         }
-
-    }
-  }
 
         synchronized (mMutexCouleurs) {
             if (!mSuspendu) {
@@ -388,12 +384,13 @@ public class CPainting extends Canvas implements MouseListener {
                 mGraphics.fillRect(x, y, 1, 1);
             }
 
-      mCouleurs[x][y] = c;
+            mCouleurs[x][y] = c;
 
-      // on fait diffuser la couleur avec une taille de diffusion pTaille:
-      if (pTaille != 0) {
-        convolution(x,y,c,pTaille);
-      }
+            // on fait diffuser la couleur avec une taille de diffusion pTaille:
+            if (pTaille != 0) {
+                convolution(x, y, c, pTaille);
+            }
+        }
     }
 
     /******************************************************************************
