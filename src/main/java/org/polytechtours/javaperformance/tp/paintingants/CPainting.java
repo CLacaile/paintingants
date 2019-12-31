@@ -110,9 +110,10 @@ public class CPainting extends Canvas implements MouseListener {
   private void initCacheCouleurs() {
       int r, g, b;
       for (r=0; r<256; r++) {
+        System.out.println("R = " + r);
           for (g = 0; g < 256; g++) {
               for (b = 0; b < 256; b++) {
-                  System.out.println("R = " + r + ", G = " + g + ", B = " + b);
+                  //System.out.println("R = " + r + ", G = " + g + ", B = " + b);
                   cacheCouleurs[r][g][b] = new Color(r, g, b);
               }
           }
@@ -326,6 +327,8 @@ public class CPainting extends Canvas implements MouseListener {
     Color lColor;
 
     switch (pTaille) {
+      case 0: 
+        return;
       case 1:
         initMatriceConv9();
         break;
@@ -341,9 +344,8 @@ public class CPainting extends Canvas implements MouseListener {
     for(i=0; i < 2*pTaille + 1; i++){
       for(j=0; j < 2*pTaille + 1; j++){
         R = G = B = 0f;
-
-        for (k = 0; k < 2*pTaille; k++) {
-          for (l = 0; l < 2*pTaille; l++) {
+        for (k = 0; k < 2*pTaille + 1; k++) {
+          for (l = 0; l < 2*pTaille + 1; l++) {
             m = (x + i + k - 2*pTaille + mDimension.width) % mDimension.width;
             n = (y + j + l - 2*pTaille + mDimension.height) % mDimension.height;
 
